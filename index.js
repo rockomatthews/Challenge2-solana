@@ -11,28 +11,18 @@ const {
     sendAndConfirmTransaction
 } = require("@solana/web3.js");
 
-const DEMO_FROM_SECRET_KEY = new Uint8Array(
-    [
-        160,  20, 189, 212, 129, 188, 171, 124,  20, 179,  80,
-         27, 166,  17, 179, 198, 234,  36, 113,  87,   0,  46,
-        186, 250, 152, 137, 244,  15,  86, 127,  77,  97, 170,
-         44,  57, 126, 115, 253,  11,  60,  90,  36, 135, 177,
-        185, 231,  46, 155,  62, 164, 128, 225, 101,  79,  69,
-        101, 154,  24,  58, 214, 219, 238, 149,  86
-      ]            
-);
 
 const transferSol = async() => {
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
     // Get Keypair from Secret Key
-    var from = Keypair.fromSecretKey(DEMO_FROM_SECRET_KEY);
+    // var from = Keypair.fromSecretKey(DEMO_FROM_SECRET_KEY);
 
     // Other things to try: 
     // 1) Form array from userSecretKey
     // const from = Keypair.fromSecretKey(Uint8Array.from(userSecretKey));
     // 2) Make a new Keypair (starts with 0 SOL)
-    // const from = Keypair.generate();
+    const from = Keypair.generate();
 
     // Generate another Keypair (account we'll be sending to)
     const to = Keypair.generate();
@@ -57,6 +47,14 @@ const transferSol = async() => {
 
     console.log("Airdrop completed for the Sender account");
 
+    var fromBalance = await connection.getBalance(from.publicKey);
+
+    console.log("Sender balance is: ", fromBalance / LAMPORTS_PER_SOL);
+
+    var toBalance = await connection.getBalance(to.publicKey);
+
+    console.log("Receiver balance is: ", toBalance / LAMPORTS_PER_SOL);
+
     // Send money from "from" wallet and into "to" wallet
     var transaction = new Transaction().add(
         SystemProgram.transfer({
@@ -73,6 +71,13 @@ const transferSol = async() => {
         [from]
     );
     console.log('Signature is ', signature);
+
+    var fromBalance = await connection.getBalance(from.publicKey);
+    console.log("Sender balance is: ", fromBalance / LAMPORTS_PER_SOL);
+
+    var toBalance = await connection.getBalance(to.publicKey);
+    console.log("Receiver balance is: ", toBalance / LAMPORTS_PER_SOL);
 }
+
 
 transferSol();
