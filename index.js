@@ -48,8 +48,9 @@ const transferSol = async() => {
     console.log("Airdrop completed for the Sender account");
 
     var fromBalance = await connection.getBalance(from.publicKey);
-
+    
     console.log("Sender balance is: ", fromBalance / LAMPORTS_PER_SOL);
+
 
     var toBalance = await connection.getBalance(to.publicKey);
 
@@ -60,7 +61,7 @@ const transferSol = async() => {
         SystemProgram.transfer({
             fromPubkey: from.publicKey,
             toPubkey: to.publicKey,
-            lamports: LAMPORTS_PER_SOL / 100
+            lamports: LAMPORTS_PER_SOL
         })
     );
 
